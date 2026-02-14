@@ -1,0 +1,8 @@
+{
+  "name": "ROXTOR GESTION INTELIGENTE",
+  "description": "Sistema de gestión operativa inteligente con Radar AI para procesamiento de ventas y trazabilidad multi-agente.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
