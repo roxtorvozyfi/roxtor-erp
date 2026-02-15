@@ -53,13 +53,21 @@ const VoiceAssistant: React.FC<Props> = ({ products, settings }) => {
 
   const startSession = async () => {
     if (isActive) return;
+    
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      setError("Falta la API_KEY de Gemini en Netlify.");
+      return;
+    }
+
     setIsConnecting(true);
     setError(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-      const outputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+      const ai = new GoogleGenAI({ apiKey });
+      const AudioContextClass = (window.AudioContext || (window as any).webkitAudioContext);
+      const inputCtx = new AudioContextClass({ sampleRate: 16000 });
+      const outputCtx = new AudioContextClass({ sampleRate: 24000 });
       audioContextRef.current = { input: inputCtx, output: outputCtx };
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -131,7 +139,11 @@ const VoiceAssistant: React.FC<Props> = ({ products, settings }) => {
               nextStartTimeRef.current = 0;
             }
           },
-          onerror: (e) => { setError("Error de conexión AI."); stopSession(); },
+          onerror: (e) => { 
+            console.error("AI Session Error:", e);
+            setError("Error de conexión AI."); 
+            stopSession(); 
+          },
           onclose: () => stopSession()
         },
         config: {
@@ -144,6 +156,7 @@ const VoiceAssistant: React.FC<Props> = ({ products, settings }) => {
       });
       sessionRef.current = await sessionPromise;
     } catch (err: any) {
+      console.error("Session Start Error:", err);
       setError(err.message || "Error al iniciar.");
       setIsConnecting(false);
     }
@@ -151,8 +164,8 @@ const VoiceAssistant: React.FC<Props> = ({ products, settings }) => {
 
   const stopSession = () => {
     if (audioContextRef.current) {
-      audioContextRef.current.input.close();
-      audioContextRef.current.output.close();
+      audioContextRef.current.input.close().catch(() => {});
+      audioContextRef.current.output.close().catch(() => {});
       audioContextRef.current = null;
     }
     setIsActive(false);
