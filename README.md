@@ -1,13 +1,15 @@
 
 # 🦖 ROXTOR Intelligent ERP v1.5
 
-Sistema de gestión operativa de alto rendimiento para la industria textil. Incluye inteligencia artificial para ventas y sincronización en la nube.
+Sistema de gestión operativa textil con **Vozify AI** (Simulador de Notas de Voz) y **Radar AI** (Escaneo de Ventas).
 
-## 🚀 Guía de Activación Profesional
+## 🚀 Guía de Despliegue: Netlify + Supabase
 
-### PASO 1: Base de Datos (Supabase)
-1. Crea un proyecto en [Supabase](https://supabase.com).
-2. En el **SQL Editor**, ejecuta este comando:
+Sigue este orden exacto para tener el sistema funcionando en menos de 5 minutos:
+
+### 1. Preparar la Base de Datos (Supabase)
+1. Entra en [Supabase](https://supabase.com) y crea un proyecto.
+2. Ve al **SQL Editor** (icono `>_`) y ejecuta este comando:
    ```sql
    create table roxtor_sync (
      store_id text primary key,
@@ -15,29 +17,37 @@ Sistema de gestión operativa de alto rendimiento para la industria textil. Incl
      payload jsonb
    );
    ```
-3. Copia la `Project URL` y la `anon key` desde **Settings > API**.
+3. Ve a **Settings > API** y copia:
+   - `Project URL`
+   - `anon public key`
 
-### PASO 2: Despliegue (Vercel)
-1. Sube tu código a GitHub.
-2. Conecta el repositorio en [Vercel](https://vercel.com).
-3. Añade la Variable de Entorno obligatoria:
-   - `API_KEY`: Tu clave de Google Gemini ([Obtenla aquí](https://aistudio.google.com)).
-4. Haz clic en **Deploy**.
+### 2. Desplegar la Interfaz (Netlify)
+1. Sube tu código a un repositorio de **GitHub**.
+2. En [Netlify](https://app.netlify.com), pulsa **"Add new site" > "Import from Git"**.
+3. Selecciona tu repo. Netlify detectará que es un proyecto de Vite.
+4. **Configura las Variables de Entorno (CRÍTICO):**
+   - Ve a **Site configuration > Environment variables**.
+   - Añade `API_KEY`: Pega tu clave de [Google Gemini](https://aistudio.google.com).
+5. Pulsa **"Deploy site"**.
 
-### PASO 3: Configuración en App
-1. Abre tu URL de Vercel.
-2. Ve a **Gerencia > Ajustes de Marca > Conexión Nube**.
-3. Pega las credenciales de Supabase y activa la sincronización.
+### 3. Conectar los puntos (Configuración Final)
+1. Abre tu URL de Netlify.
+2. Entra con el PIN inicial: `0000`.
+3. Ve a **Gerencia** (PIN Maestro: `1234`).
+4. Ve a **Ajustes de Marca > Conexión Nube**:
+   - Activa el interruptor.
+   - Pega la URL y la Anon Key de Supabase.
+   - Pulsa **"Probar Conexión"**.
 
 ---
 
-## 🔒 Credenciales Maestras
-- **PIN Acceso App:** `0000`
-- **PIN Gerencia:** `1234`
-*(Cámbialos en el panel de Ajustes tras el primer inicio)*
+## 🔒 Seguridad
+- **PIN Acceso App:** `0000` (Cámbialo en Ajustes inmediatamente).
+- **PIN Gerencia:** `1234` (Cámbialo en Ajustes inmediatamente).
 
-## 🛠️ Funciones Principales
-- **Radar AI:** Procesa textos de WhatsApp y genera órdenes automáticas.
-- **Vozify:** Entrena a tu equipo con audios de respuesta con el tono de tu marca.
-- **Flujo de Taller:** Control de tareas, transferencias y espera de confección externa.
-- **Cierre Consolidado:** Métricas financieras por sede en tiempo real.
+## 🎙️ Vozify AI: Notas de Voz de WhatsApp
+Este módulo permite a los agentes practicar o generar respuestas de audio. La IA conoce:
+- Precios (Detal y Mayor).
+- Reglas de abono (50% obligatorio).
+- Políticas de no devolución.
+- Tiempo de entrega de la sede.
