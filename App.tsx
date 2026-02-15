@@ -100,7 +100,6 @@ const App: React.FC = () => {
         last_sync: new Date().toISOString(),
         payload: { products, orders, agents, workshops, settings }
       };
-      // Usamos el endpoint REST de Supabase con Upsert habilitado mediante 'resolution=merge-duplicates'
       const response = await fetch(`${settings.cloudSync.apiUrl}/rest/v1/roxtor_sync`, {
         method: 'POST',
         headers: {
@@ -133,12 +132,11 @@ const App: React.FC = () => {
     if (savedSettings) setSettings(prev => ({ ...prev, ...JSON.parse(savedSettings) }));
   }, []);
 
-  // Efecto de sincronización periódica
   useEffect(() => {
     if (isSessionActive && settings.cloudSync?.enabled) {
       const timer = setTimeout(() => {
         syncToSupabase();
-      }, 5000); // Esperar 5 seg tras cambios para no saturar
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [products, orders, settings, agents, workshops, isSessionActive, syncToSupabase, settings.cloudSync?.enabled]);
@@ -253,7 +251,7 @@ const App: React.FC = () => {
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-[#000814] border-t border-white/5 flex items-center justify-center gap-4 md:gap-12 px-4 z-30 shadow-2xl">
         <TabItem active={activeTab === 'radar'} onClick={() => setActiveTab('radar')} icon={<RadarIcon size={22}/>} label="Radar" />
-        <TabItem active={activeTab === 'operaciones'} onClick={() => setActiveTab('operaciones'} icon={<Zap size={22}/>} label="Operaciones" />
+        <TabItem active={activeTab === 'operaciones'} onClick={() => setActiveTab('operaciones')} icon={<Zap size={22}/>} label="Operaciones" />
         <TabItem active={activeTab === 'stock'} onClick={() => setActiveTab('stock')} icon={<Package size={22}/>} label="Inventario" />
         <TabItem active={activeTab === 'gestion'} onClick={() => setActiveTab('gestion')} icon={<ShieldCheck size={22}/>} label="Gerencia" />
       </nav>
